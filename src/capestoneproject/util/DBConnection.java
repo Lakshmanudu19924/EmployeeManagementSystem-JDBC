@@ -5,11 +5,23 @@ import java.sql.DriverManager;
 
 public class DBConnection {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/DB_NAME?useSSL=false&serverTimezone=UTC";
+    // Change DB name if required
+    private static final String URL =
+            "jdbc:mysql://localhost:3306/capestone?useSSL=false&serverTimezone=UTC";
+
+    // Read credentials from Environment Variables
     private static final String USER = System.getenv("DB_USER");
     private static final String PASSWORD = System.getenv("DB_PASSWORD");
 
     public static Connection getConnection() throws Exception {
+
+        // Safety check (recommended)
+        if (USER == null || PASSWORD == null) {
+            throw new RuntimeException(
+                "Database credentials not found. Please set DB_USER and DB_PASSWORD environment variables."
+            );
+        }
+
         Class.forName("com.mysql.cj.jdbc.Driver");
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
